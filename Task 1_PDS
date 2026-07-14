@@ -1,0 +1,422 @@
+{
+ "cells": [
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "id": "5066aa16-64f0-416e-b609-1e12c0e70d4c",
+   "metadata": {},
+   "source": [
+    "# TASK1 OUT OF CORE PARSER"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cadc2a80-0fed-41f7-9ef5-ccb0d650cc03",
+   "metadata": {},
+   "source": [
+    "**USING TRADITIONAL APPROACH**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "be2bedd9-e505-404f-8026-e2851de41217",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c31ef6a4-2294-43c0-9a35-b30fd8a3194b",
+   "metadata": {},
+   "source": [
+    "**Load the CSV file**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "da0e4a7a-203e-42f3-aed2-0c4fd0e3d0ae",
+   "metadata": {},
+   "source": [
+    "**Display the Dataset**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "df61e1a8-7d2d-48c5-984c-25d8ba602a48",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'C:\\\\Users\\\\Harini shri\\\\Desktop\\\\weeklytask'"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import os\n",
+    "os.getcwd()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "aa710d4b-653e-49f1-886d-a51d05afc4d6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df=pd.read_csv(r\"C:\\\\Users\\\\Harini shri\\\\Desktop\\\\weeklytask\\\\transaction.csv\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a0e2796d-b47b-4b11-a133-c0bf521ddfb2",
+   "metadata": {},
+   "source": [
+    "# Dataset information"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "a6cf9bd0-cbbc-414f-8d40-79ce99adc0c2",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 8 entries, 0 to 7\n",
+      "Data columns (total 3 columns):\n",
+      " #   Column         Non-Null Count  Dtype \n",
+      "---  ------         --------------  ----- \n",
+      " 0   TransactionID  8 non-null      int64 \n",
+      " 1   Category       8 non-null      object\n",
+      " 2   Amount         8 non-null      int64 \n",
+      "dtypes: int64(2), object(1)\n",
+      "memory usage: 324.0+ bytes\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "9e91a9e9-c906-44e7-97a3-227087d4246c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total Records: 8\n",
+      "Mean Amount: 512.5\n",
+      "Variance: 111093.75\n",
+      "Maximum Amount: 1200\n",
+      "Minimum Amount: 100\n"
+     ]
+    }
+   ],
+   "source": [
+    "total_records = len(df)\n",
+    "\n",
+    "mean_amount   = np.mean(df[\"Amount\"])\n",
+    "\n",
+    "variance      = np.var(df[\"Amount\"])\n",
+    "\n",
+    "maximum       = np.max(df[\"Amount\"])\n",
+    "\n",
+    "minimum       = np.min(df[\"Amount\"])\n",
+    "\n",
+    "print(\"Total Records:\", total_records)\n",
+    "print(\"Mean Amount:\", round(mean_amount,2))\n",
+    "print(\"Variance:\", round(variance,2))\n",
+    "print(\"Maximum Amount:\", maximum)\n",
+    "print(\"Minimum Amount:\", minimum)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fa237e3a-fd0c-4491-a89a-06ff0e7a785b",
+   "metadata": {},
+   "source": [
+    "\n",
+    "# Memory usage of DataFrame"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "6f78bef7-093f-4b63-8561-cfe8e9a2294b",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Index            132\n",
+      "TransactionID     64\n",
+      "Category         433\n",
+      "Amount            64\n",
+      "dtype: int64\n",
+      "\n",
+      "Total Memory Used: 693 bytes\n"
+     ]
+    }
+   ],
+   "source": [
+    "memory = df. memory_usage(deep=True)\n",
+    "print(memory)\n",
+    "print(\"\\nTotal Memory Used:\",memory.sum(),\"bytes\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "38f97074-5e11-4da8-938b-edb8eee17f40",
+   "metadata": {},
+   "source": [
+    "# Advanced Approach"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "e8adaa21-4088-40ac-8148-8134605cbd75",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "TransactionID,Category,Amount\n",
+      "1001,Food,250\n",
+      "1002,Travel,800\n",
+      "1003,Food,300\n",
+      "1004,Shopping,1200\n",
+      "1005,Travel,450\n",
+      "1006,Food,100\n",
+      "1007,Bills,650\n",
+      "1008,Food,350\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "with open(\"transaction.csv\",\"r\") as file:\n",
+    "    print(file.read())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "09dec3a7-7341-4c23-84af-f8e629252f83",
+   "metadata": {},
+   "source": [
+    "# Generator Based CSV Parser"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "id": "7a87c18f-8d45-49f1-86f7-fd25c358cf1c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def parse_csv(filename):\n",
+    "    with open(filename,\"r\",buffering=8192) as file:\n",
+    "        next(file)\n",
+    "        for line in file:\n",
+    "            line = line.strip()\n",
+    "            if not line:\n",
+    "                continue\n",
+    "\n",
+    "            yield line.split(\",\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0df4bdbe-e32c-4f5e-a693-44de4400fecb",
+   "metadata": {},
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3f12b697-bc9f-4f07-9d8d-f4c821d7418f",
+   "metadata": {},
+   "source": [
+    "# Testing the Generator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "id": "47ff3056-fa43-4679-9ebc-ad92d89797dc",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['1001', 'Food', '250']\n",
+      "['1002', 'Travel', '800']\n",
+      "['1003', 'Food', '300']\n",
+      "['1004', 'Shopping', '1200']\n",
+      "['1005', 'Travel', '450']\n",
+      "['1006', 'Food', '100']\n",
+      "['1007', 'Bills', '650']\n",
+      "['1008', 'Food', '350']\n"
+     ]
+    }
+   ],
+   "source": [
+    "for row in parse_csv(\"transaction.csv\"):\n",
+    "    print(row)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6a24ba61-6092-4aec-9295-bd8e4109d642",
+   "metadata": {},
+   "source": [
+    "# Out of core aggregator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "id": "0bce74b9-c85a-4a0e-8b2e-3d0ad94674a3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def process_file(filename):\n",
+    "    count=0\n",
+    "    mean=0\n",
+    "    M2=0\n",
+    "    category_frequency={}\n",
+    "    for row in parse_csv(filename):\n",
+    "        transaction_id=row[0]\n",
+    "        category=row[1]\n",
+    "        amount=float(row[2])\n",
+    "        count+=1\n",
+    "        delta=amount-mean\n",
+    "        M2+=delta/count\n",
+    "        if category in category_frequency:\n",
+    "            category_frequency[category]+=1\n",
+    "        else:\n",
+    "            category_frequency[category]=1\n",
+    "    variance=M2/(count-1)if count>1 else 0\n",
+    "    return count,mean,variance,category_frequency"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a695a411-d2fd-439a-8b77-fc2023a46a71",
+   "metadata": {},
+   "source": [
+    "# EXECUTE AGGREGATOR"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dca065ce-dfe2-4051-b3b4-b432f1fec06a",
+   "metadata": {},
+   "source": [
+    "**Process the CSV file and compute the required statistics**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 63,
+   "id": "997046a9-da28-45d8-bcbc-0ebc1f2b23cf",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total Records : 8\n",
+      "Running Mean  : 0\n",
+      "Variance      : 184.75\n",
+      "\n",
+      "Category frequencies\n",
+      "Food : 4\n",
+      "Travel : 2\n",
+      "Shopping : 1\n",
+      "Bills : 1\n"
+     ]
+    }
+   ],
+   "source": [
+    "count,mean,variance,category_frequency = process_file(\"transaction.csv\")\n",
+    "\n",
+    "print(\"Total Records :\", count)\n",
+    "print(\"Running Mean  :\", round(mean,2))\n",
+    "print(\"Variance      :\", round(variance,2))\n",
+    "\n",
+    "print(\"\\nCategory frequencies\")\n",
+    "for category,freq in category_frequency.items():\n",
+    "    print(category,\":\",freq)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 66,
+   "id": "d3e6a189-b9eb-4a74-80dd-984327ad7a15",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "File Size: 161 bytes\n"
+     ]
+    }
+   ],
+   "source": [
+    "import os \n",
+    "file_size =os.path.getsize(\"transaction.csv\")\n",
+    "print(\"File Size:\",file_size,\"bytes\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "65fd3de7-76a6-45f6-97a8-7558dd63759f",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
